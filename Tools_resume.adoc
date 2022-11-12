@@ -1,0 +1,57 @@
+
+== Introduction :
+    In this document i will give the necessary information about evry tools or technology used in this driver developement project.   
+== Makefile :
+    - The makfile is file that tell the make how to compile the c source code.
+    - A simple makfile is composed of : 
+            - target : The object file that will be created by the makfile  
+            - prereauisites : The source code to be compiled (the input files)
+            - recipe : The qction that the make will carries out
+
+== Device drivers concept : 
+
+=== Device drivers intro : 
+    Device driver is a speacial code that interface the hardware to the system by implementing some system calls on a special files. 
+    Note : In a Unix-like OS everything is a file and physical devices are represented as speacial files (under /dev).
+    The drivers should implement the system calls to manipulate the files of the peripherals. 
+    Note : The main diffderence between a normal c function and a system call is that the later is mainly executed into the kernel while a function executes into the user space only (the c fucntion use the system call anyway to be executed).
+    In the linux kernel there are three major device types exist : char device, block device and net device , so we have three type of driver.
+
+=== Character device driver : 
+    The char device is a peripheral wich can be accessed as a stream of bytes such as serial port audio device ...etc.
+
+==== Character devices concepts : 
+    The char devices are accessed through names in the filesystem. The name are located in the /dev directory. 
+    The char drivers are identified by a "c" in the first column of the ls -l. (Block devices appear in /dev by a "b" in the first column). 
+    crw-rw-rw- 1 root   root    1, 3   Feb 23 1999  null
+    crw------- 1 root   root   10, 1   Feb 23 1999  psaux
+    crw------- 1 rubini tty     4, 1   Aug 16 22:22 tty1
+    crw-rw-rw- 1 root   dialout 4, 64  Jun 30 11:19 ttyS0
+    crw-rw-rw- 1 root   dialout 4, 65  Aug 16 00:00 ttyS1
+    crw------- 1 root   sys     7, 1   Feb 23 1999  vcs1
+    crw------- 1 root   sys     7, 129 Feb 23 1999  vcsa1
+    crw-rw-rw- 1 root   root    1, 5   Feb 23 1999  zero
+    Their are two important numbers to concidere : the major and the minor device number for each particular device.The major identifie the driver associated with the device. The minor is used only by the driver specified by the major number(its common to a driver to control several devices and the minor is a way to differentiate among them ).
+    devfs : device file system. 
+    Adding a new driver to the system means assigning a major number to it. The assignement should be made in the initialisation by calling the function register_chrdev defined in the <linux/fs.h>.
+     int register_chrdev(unsigned int major, const char *name,
+      struct file_operations *fops);
+
+
+
+== Kernel Linux progamming :
+
+    In this section i will explain function of the kernel linux : 
+
+    - register_chrdev : is a function of the <linux/fs.h> used to craete a and register a new char device driver.
+                int register_chrdev(unsigned int major, const char *name,
+      struct file_operations *fops) : The return value indicate the success or the failure of the opearation.A negative return code signals an error, 0 or a positive value reports a success.
+
+
+
+
+
+
+
+
+                         
